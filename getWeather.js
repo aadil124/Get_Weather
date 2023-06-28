@@ -1,11 +1,9 @@
 const restCountryUrl = "https://restcountries.com/v3.1/all";
-setTimeout(() => {
-  getDataCountry();
-}, 2000);
 const getDataCountry = async () => {
+  let countryData;
   try {
     const response = await fetch(restCountryUrl);
-    const countryData = await response.json();
+    countryData = await response.json();
     countryData.map((item) => {
       showCountryData(item);
     });
@@ -13,6 +11,7 @@ const getDataCountry = async () => {
     console.log(err);
   }
 };
+getDataCountry();
 
 const showCountryData = (obj) => {
   const countryName = obj.name.common;
@@ -22,39 +21,44 @@ const showCountryData = (obj) => {
   const population = obj.population;
   const flag = obj.flags.png;
   console.log(countryName, region, population);
+  const apiKey = `88770fab231ef74f4f8ab39995aa3633`;
+  const weatherUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}`;
 
-  const weatherUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=88770fab231ef74f4f8ab39995aa3633`;
-
-  const getWeatherData = async (weatherUrl) => {
+  const getWeatherData = async () => {
+    let countryData;
+    let weatherData;
     try {
       const weatherResponse = await fetch(weatherUrl);
-      const weatherData = await weatherResponse.json();
-      const data = weatherData.main;
-      console.log(weatherData.main);
-      const btnWeather = document.querySelector(".btnWeather");
-
-      const handleClick = () => {
-        const pressure = data.pressure;
-        const maxTemp = data.temp_max;
-        const minTemp = data.temp_min;
-        const humidity = data.humidity;
-        console.log("click++++++", pressure, maxTemp, minTemp, humidity);
-        // const pressureDom = document.querySelector(".pressure");
-        // const maxTempDom = document.querySelector(".maxTemp");
-        // const minTempDom = document.querySelector(".minTemp");
-        // const humidityDom = document.querySelector(".humidity");
-        // pressureDom.innerHTML = `Pressure: ${pressure} Pascal`;
-        // maxTempDom.innerHTML = `Max Temp: ${maxTemp - 273} Degree`;
-        // minTempDom.innerHTML = `Min Temp: ${minTemp - 273} Degree`;
-        // humidityDom.innerHTML = `Humidity: ${humidity} `;
-      };
+      weatherData = await weatherResponse.json();
+      countryData = weatherData.main;
+      // console.log(weatherData);
+      console.log(countryData);
+      const btnWeather = document.querySelector("#btnClick");
       btnWeather.addEventListener("click", handleClick);
     } catch (error) {
       console.log(`Weather ${error}`);
     }
+    return countryData;
   };
-  getWeatherData(weatherUrl);
-
+  // getWeatherData(weatherUrl);
+  const handleClick = () => {
+    // let weatherDataNew = getWeatherData(weatherUrl);
+    // console.log("++++++", weatherDataNew);
+    console.log("++++++++++++++++++");
+    // const pressure = weatherDataNew.pressure;
+    // const maxTemp = weatherDataNew.temp_max;
+    // const minTemp = weatherDataNew.temp_min;
+    // const humidity = weatherDataNew.humidity;
+    // console.log("click++++++", pressure, maxTemp, minTemp, humidity);
+    // const pressureDom = document.querySelector(".pressure");
+    // const maxTempDom = document.querySelector(".maxTemp");
+    // const minTempDom = document.querySelector(".minTemp");
+    // const humidityDom = document.querySelector(".humidity");
+    // pressureDom.innerHTML = `Pressure: ${pressure} Pascal`;
+    // maxTempDom.innerHTML = `Max Temp: ${maxTemp - 273} Degree`;
+    // minTempDom.innerHTML = `Min Temp: ${minTemp - 273} Degree`;
+    // humidityDom.innerHTML = `Humidity: ${humidity} %`;
+  };
   const mainContent = document.querySelector(".mainContent");
   mainContent.innerHTML += `
   <div class="col-sm-12 col-md-4 col-lg-3 mb-3 mb-sm-3">
@@ -64,7 +68,7 @@ const showCountryData = (obj) => {
             <h2 class="card-title">Name: ${countryName}</h2>
             <h5 class="card-title">Region: ${region}</h5>
             <h5 class="card-title">Population: ${population}</h5>
-            <button class="btn btn-primary btnWeather">Get Weather</button>
+            <button class="btn btn-primary btnWeather" id="btnClick">Get Weather</button>
             <h5 class="card-title pressure"></h5>
             <h5 class="card-title maxTemp"></h5>
             <h5 class="card-title minTemp"></h5>
